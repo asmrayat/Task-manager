@@ -66,22 +66,20 @@ const Section = ({ status, tasks, setTasks, todos, onGoing, completed }) => {
       const mTasks = prev.map((t) => {
         console.log(id);
         if (t._id === id) {
-          console.log(status)
+          console.log(status);
           return { ...t, status: status };
-          
         }
         return t;
       });
-     
+
       console.log(mTasks);
-      fetch(`http://localhost:5000/task/${id}`, {
+      fetch(`https://task-manager-backend-dusky.vercel.app/task/${id}`, {
         method: "PATCH",
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify({status}),
-      })
-        .then((res) => res.json())
+        body: JSON.stringify({ status }),
+      }).then((res) => res.json());
       return mTasks;
     });
   };

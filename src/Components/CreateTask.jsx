@@ -13,9 +13,9 @@ const CreateTask = ({ tasks, setTasks }) => {
     const Priority = priority;
     const status = "todo";
 
-    const data = {title, description, deadline, Priority, status}
+    const data = { title, description, deadline, Priority, status };
 
-    fetch("http://localhost:5000/create-task", {
+    fetch("https://task-manager-backend-dusky.vercel.app/create-task", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
