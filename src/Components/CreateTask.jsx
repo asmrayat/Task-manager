@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-const CreateTask = ({ tasks, setTasks }) => {
+const CreateTask = ({ tasks, setTasks, setAck }) => {
   const [priority, setPriority] = useState("");
 
   const handleSubmit = (e) => {
@@ -15,14 +15,16 @@ const CreateTask = ({ tasks, setTasks }) => {
 
     const data = { title, description, deadline, Priority, status };
 
-    fetch("https://task-manager-backend-dusky.vercel.app/create-task", {
+    fetch("https://task-manager-backend-8vlr.onrender.com/create-task", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
       },
       body: JSON.stringify(data),
-    }).then((res) => res.json());
-    // .then((data) => console.log(data));
+    })
+      .then((res) => res.json())
+      .then((data) => setAck(data.acknowledged));
+    form.reset();
   };
 
   return (
@@ -34,7 +36,7 @@ const CreateTask = ({ tasks, setTasks }) => {
         Create Post
       </button>
       <dialog id="my_modal_1" className="modal">
-        <div className="modal-box">
+        <div className="modal-box ">
           <h3 className="font-bold text-lg">Information</h3>
           <form onSubmit={handleSubmit}>
             <label className="form-control w-full max-w-xs">
@@ -53,7 +55,7 @@ const CreateTask = ({ tasks, setTasks }) => {
                 <span className="label-text">Your bio</span>
               </div>
               <textarea
-                className="textarea textarea-bordered h-24"
+                className="textarea textarea-bordered h-24 w-full max-w-xs"
                 name="description"
                 placeholder="Bio"
               ></textarea>
@@ -63,7 +65,7 @@ const CreateTask = ({ tasks, setTasks }) => {
                 <span className="label-text">Deadline</span>
               </div>
               <input
-                type="text"
+                type="date"
                 placeholder="Type here"
                 name="deadline"
                 className="input input-bordered w-full max-w-xs"

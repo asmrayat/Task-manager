@@ -6,23 +6,34 @@ import ListTask from "../Components/ListTask";
 
 const Main = () => {
   const [tasks, setTasks] = useState([]);
+  const [ack, setAck] = useState(false);
 
   useEffect(() => {
-    fetch("https://task-manager-backend-dusky.vercel.app/task", {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => setTasks(data));
-    // setTasks(JSON.parse(localStorage.getItem("tasks")) || []);
-  }, []);
+    setAck(false);
+    const data = async () => {
+      try {
+        const response = await fetch(
+          "https://task-manager-backend-8vlr.onrender.com/task",
+          {
+            method: "GET",
+            headers: {
+              "Content-type": "application/json",
+            },
+          }
+        );
+        const data = await response.json();
+        setTasks(data);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+    data();
+  }, [ack]);
 
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="bg-slate-100 w-screen h-screen flex flex-col items-center pt-3 gap-16">
-        <CreateTask tasks={tasks} setTasks={setTasks} />
+        <CreateTask tasks={tasks} setAck={setAck} setTasks={setTasks} />
         <ListTask tasks={tasks} setTasks={setTasks} />
       </div>
     </DndProvider>

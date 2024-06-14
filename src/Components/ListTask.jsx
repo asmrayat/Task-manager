@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
+import { MdDelete } from "react-icons/md";
 
 const ListTask = ({ tasks, setTasks }) => {
   // console.log(tasks);
@@ -73,7 +74,7 @@ const Section = ({ status, tasks, setTasks, todos, onGoing, completed }) => {
       });
 
       console.log(mTasks);
-      fetch(`https://task-manager-backend-dusky.vercel.app/task/${id}`, {
+      fetch(`https://task-manager-backend-8vlr.onrender.com/task/${id}`, {
         method: "PATCH",
         headers: {
           "Content-type": "application/json",
@@ -118,28 +119,41 @@ const Task = ({ task, tasks, setTasks }) => {
   }));
 
   const handleRemove = (id) => {
-    console.log(_id);
-    const fTasks = tasks.filter((t) => t._id !== _id);
-    localStorage.setItem("tasks", JSON.stringify(fTasks));
+    console.log(id);
+    fetch(`https://task-manager-backend-8vlr.onrender.com/task/${id}`, {
+      method: "DELETE",
+    }).then((res) => res.json());
+    const fTasks = tasks.filter((t) => t._id !== id);
     setTasks(fTasks);
   };
   return (
     <div
       ref={drag}
-      className={`relative p-4 mt-8 shadow-md rounded-md cursor-grab ${
+      className={`relative p-2 cursor-grab ${
         isDragging ? "opacity-25" : "opacity-100"
       }`}
     >
-      <p>{task.title}</p>
-      <p>{task.description}</p>
-      <p>{task.deadline}</p>
-      <p>{task.priority}</p>
-      <button
-        className=" absolute bottom-1 right-1"
-        onClick={() => handleRemove(task._id)}
-      >
-        D
-      </button>
+      <div className="collapse bg-base-200">
+        <input type="radio" name="my-accordion-1" />
+        <div className="collapse-title font-medium">{task.title}</div>
+        <div className="collapse-content">
+          <p className="text-xs">{task.description}</p>
+          <div className="badge badge-accent me-2 mt-3">{task.deadline}</div>
+          <div
+            className={`badge ${
+              task.Priority === "high" ? "badge-primary" : "badge-secondary"
+            }`}
+          >
+            {task.Priority}
+          </div>
+        </div>
+        <button
+          className=" text-2xl absolute bottom-4 right-3"
+          onClick={() => handleRemove(task._id)}
+        >
+          <MdDelete />
+        </button>
+      </div>
     </div>
   );
 };
